@@ -1,11 +1,23 @@
 import express from "express";
 import dotenv from "dotenv";
+import userRouter from "./src/routes/userRouter.js";
+import { connectDB } from "./src/config/db.js";
 
 dotenv.config();
 
-const app= express();
+const app = express();
 
 
-app.listen(5001,() => {
-console.log("Server started at Port 5001");
-});
+// Routes
+app.use("/api/users", userRouter);
+
+const PORT = process.env.PORT || 5001;
+if (process.env.NODE_ENV !== "test") {
+  connectDB().then(() => {
+    app.listen(PORT, () => {
+      console.log("Server started on PORT:", PORT);
+    });
+  });
+}
+
+export default app;
