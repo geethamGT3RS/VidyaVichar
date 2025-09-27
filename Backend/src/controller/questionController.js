@@ -44,6 +44,7 @@ async function getQuestionsByCourseAndInstructor(courseName, instructorEmail) {
                     questionAnswered: 1,
                     isLive: 1,
                     courseName: 1, // Optional: Include courseName for context
+                    askedAt: 1
                 }
             },
             
@@ -123,6 +124,7 @@ async function getTACourseQuestions(courseName, taEmail) {
                     questionAnswered: 1,
                     isLive: 1,
                     courseName: 1, 
+                    askedAt: 1
                 }
             },
             

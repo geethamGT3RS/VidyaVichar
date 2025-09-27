@@ -199,8 +199,13 @@ async function markQuestionAsAnswered(questionId) {
         const result = await Question.updateOne(
             // Filter: Find the document matching the questionId
             { questionId: questionId },
-            // Update: Set questionAnswered to true
-            { $set: { questionAnswered: true } }
+            // Update: Set questionAnswered to true and record the current timestamp
+            { 
+                $set: { 
+                    questionAnswered: true,
+                    answeredAt: new Date() // Store the current timestamp
+                } 
+            }
         );
 
         // Check if a question was actually found and modified
@@ -216,10 +221,53 @@ async function markQuestionAsAnswered(questionId) {
     }
 }
 
+/**
+ * Creates a new question document in the database and automatically assigns a creation timestamp.
+ * * @param {Object} questionData - Object containing question details.
+ * @param {string} questionData.question - The text of the question.
+ * @param {string} questionData.askedByEmail - The email of the student asking the question.
+ * @param {string} questionData.courseName - The name of the course the question is related to.
+ * @param {string} questionData.instructorEmail - The email of the instructor for this course.
+ * @returns {Object} - The newly created Question document.
+ */
+async function createNewQuestion(questionData) {
+    try {
+        // --- Get next questionId ---
+        // Find the highest existing questionId and increment it.
+        // NOTE: For production, you should use a separate sequence collection or rely on the _id.
+        const lastQuestion = await Question.findOne().sort({ questionId: -1 });
+        const nextQuestionId = lastQuestion ? lastQuestion.questionId + 1 : 1;
+        // ---------------------------
+
+        const newQuestion = await Question.create({
+            questionId: nextQuestionId, // Assign the new unique ID
+            question: questionData.question,
+            askedByEmail: questionData.askedByEmail,
+            courseName: questionData.courseName,
+            instructorEmail: questionData.instructorEmail,
+            
+            // Default flags and timestamp
+            questionAnswered: false,
+            isLive: true, // Typically, a new question starts as live
+            askedAt: new Date() // Record the creation timestamp (ISODate format)
+        });
+
+        // The document returned by Mongoose will now include the MongoDB-generated timestamp.
+        return newQuestion;
+
+    } catch (error) {
+        console.error("Error creating new question:", error);
+        throw new Error(`Could not submit question. Details: ${error.message}`);
+    }
+}
+
+
+
 export default {
     getStudentCourses,
     getTACourses,
     getInstructorCourses,
+    createNewQuestion,
     endLiveSession,
     markQuestionAsAnswered
 };
