@@ -161,8 +161,65 @@ async function getTACourses(taUserEmail) {
     }
 }
 
+/**
+ * Updates all live questions to non-live status, scoped to a specific instructor and course.
+ * @param {string} instructorEmail - The email of the instructor running the session.
+ * @param {string} courseName - The name of the course where the session is running.
+ * @returns {Object} - Result object from the updateMany operation.
+ */
+async function endLiveSession(instructorEmail, courseName) {
+    try {
+        const result = await Question.updateMany(
+            // Filter: Find documents where isLive is true AND match the specific instructor/course
+            { 
+                isLive: true,
+                instructorEmail: instructorEmail,
+                courseName: courseName
+            },
+            // Update: Set isLive to false
+            { $set: { isLive: false } }
+        );
+
+        // Result typically contains { acknowledged: true, modifiedCount: N, upsertedId: null, matchedCount: M }
+        return result;
+
+    } catch (error) {
+        console.error("Error ending live session:", error);
+        throw new Error(`Could not update live questions. Details: ${error.message}`);
+    }
+}
+
+/**
+ * Marks a specific question as answered using its unique questionId.
+ * @param {number} questionId - The unique ID of the question to update.
+ * @returns {Object} - Result object from the updateOne operation.
+ */
+async function markQuestionAsAnswered(questionId) {
+    try {
+        const result = await Question.updateOne(
+            // Filter: Find the document matching the questionId
+            { questionId: questionId },
+            // Update: Set questionAnswered to true
+            { $set: { questionAnswered: true } }
+        );
+
+        // Check if a question was actually found and modified
+        if (result.matchedCount === 0) {
+            throw new Error(`Question with ID ${questionId} not found.`);
+        }
+        
+        return result;
+
+    } catch (error) {
+        console.error(`Error marking question ${questionId} as answered:`, error);
+        throw new Error(`Could not mark question as answered. Details: ${error.message}`);
+    }
+}
+
 export default {
     getStudentCourses,
     getTACourses,
-    getInstructorCourses
+    getInstructorCourses,
+    endLiveSession,
+    markQuestionAsAnswered
 };
