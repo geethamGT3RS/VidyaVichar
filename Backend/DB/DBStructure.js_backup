@@ -17,12 +17,14 @@ db.courseMapping.drop();
 db.courseMapping.insertMany([
   {
     courseName: "SSD",
+    courseDesc: "Software Development knowledge for the students",
     instructorEmail: ["sai@example.com", "john@example.com"],
     taEmail: ["aditya@example.com", "chandrasekhar@example.com"],
     studentEmail: ["anshul@example.com", "bidisha@example.com", "tanooj@example.com", "geetam@example.com", "anukriti@example.com"],
   },
   {
     courseName: "AOS",
+    courseDesc: "Advanced Operating System fundamentals for using various tools and techniques",
     instructorEmail: ["john@example.com"],
     taEmail: ["alice@example.com", "bob@example.com"],
     studentEmail: ["bidisha@example.com", "tanooj@example.com", "geetam@example.com", "anukriti@example.com"],

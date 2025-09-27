@@ -30,14 +30,9 @@ const QuestionSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    askedAt: {
-        type: Date,
-        default: Date.now,
-    },
     answeredAt: {
         type: Date,
     }
-    
 });
 
 export default QuestionSchema;
