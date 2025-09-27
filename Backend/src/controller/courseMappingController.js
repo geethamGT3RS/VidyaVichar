@@ -250,6 +250,7 @@ async function createNewQuestion(questionData) {
             questionAnswered: false,
             isLive: true, // Typically, a new question starts as live
             askedAt: new Date() // Record the creation timestamp (ISODate format)
+            
         });
 
         // The document returned by Mongoose will now include the MongoDB-generated timestamp.

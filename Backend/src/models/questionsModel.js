@@ -30,7 +30,14 @@ const QuestionSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    // Other fields like answers, timestamps, etc., could be added here
+    askedAt: {
+        type: Date,
+        default: Date.now,
+    },
+    answeredAt: {
+        type: Date,
+    }
+    
 });
 
 export default QuestionSchema;
