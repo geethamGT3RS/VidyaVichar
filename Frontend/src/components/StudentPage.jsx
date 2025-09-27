@@ -232,19 +232,23 @@ export default function StudentQuestions() {
                                     <div className="text-slate-500 bg-white p-4 rounded-lg shadow-sm">No answered questions yet.</div>
                                 )}
                                 {answered.map((q) => (
-                                    <article key={q.id} className="bg-white rounded-lg p-4 shadow-sm opacity-80">
-                                        <div className="flex justify-between items-start">
-                                            <div>
-                                                <p className="font-medium text-slate-600 line-through">{q.text}</p>
-                                                <div className="text-xs text-slate-500 mt-1.5">
-                                                    {q.author} • {new Date(q.createdAt).toLocaleTimeString()}
-                                                </div>
-                                            </div>
-                                            <div className="text-right text-xs text-emerald-600 font-semibold bg-emerald-50 px-2 py-1 rounded-md">
-                                                Answered
-                                            </div>
+                                    <article
+                                    key={q.id}
+                                    className="bg-white rounded-lg p-4 shadow-sm flex justify-between items-start"
+                                >
+                                    <div>
+                                        <div className="font-medium text-slate-800">{q.text}</div>
+                                        <div className="text-xs text-slate-500 mt-1">
+                                            {q.author} • {new Date(q.createdAt).toLocaleString()}
                                         </div>
-                                    </article>
+                                    </div>
+                                    <div className="flex flex-col items-end gap-2">
+                                        <div className="text-sm">{q.upvotes} ⬆</div>
+                                        <div className="px-3 py-2 text-sm rounded bg-slate-100 text-slate-700">
+                                            Answered
+                                        </div>
+                                    </div>
+                                </article>
                                 ))}
                             </div>
                         </aside>
