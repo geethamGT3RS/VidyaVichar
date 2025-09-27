@@ -13,8 +13,8 @@
 use("VidyaVichar");
 
 // insert collections to the Courses database
-db.courseMapping.drop();
-db.courseMapping.insertMany([
+db.courseMappings.drop();
+db.courseMappings.insertMany([
   {
     courseName: "SSD",
     instructorEmail: ["sai@example.com", "john@example.com"],
@@ -31,10 +31,9 @@ db.courseMapping.insertMany([
 
 
 // insert collections in the VidyaVichar database's Questions collection
-db.Questions.drop();
-db.Questions.insertMany([
+db.questions.drop();
+db.questions.insertMany([
 {
-questionId: 1, // New field
 question: "What is a database?",
 askedByEmail: "anshul@example.com", // Updated to email
 courseName: "SSD",
@@ -43,7 +42,6 @@ questionAnswered: true,
 isLive: true,
 },
 {
-questionId: 2, // New field
 question: "What is indexing?",
 askedByEmail: "tanooj@example.com", // Updated to email
 courseName: "SSD",
@@ -52,7 +50,6 @@ questionAnswered: true,
 isLive: false,
 },
 {
-questionId: 3, // New field
 question: "What is sharding?",
 askedByEmail: "geetam@example.com", // Updated to email
 courseName: "AOS",
@@ -61,7 +58,6 @@ questionAnswered: false,
 isLive: false,
 },
 {
-questionId: 4, // New field
 question: "What is replication?",
 askedByEmail: "anukriti@example.com", // Updated to email
 courseName: "AOS",
@@ -70,7 +66,6 @@ questionAnswered: false,
 isLive: true,
 },
 {
-questionId: 5, // New field
 question: "What is a transaction?",
 askedByEmail: "bidisha@example.com", // Updated to email
 courseName: "SSD",
@@ -79,7 +74,6 @@ questionAnswered: false,
 isLive: true,
 },
 {
-questionId: 6, // New field
 question: "What is CAP theorem?",
 askedByEmail: "anshul@example.com", // Updated to email
 courseName: "AOS",
@@ -88,7 +82,6 @@ questionAnswered: false,
 isLive: false,
 },
 {
-questionId: 7, // New field
 question: "What is ACID?",
 askedByEmail: "tanooj@example.com", // Updated to email
 courseName: "SSD",
@@ -97,7 +90,6 @@ questionAnswered: false,
 isLive: false,
 },
 {
-questionId: 8, // New field
 question: "What is BASE?",
 askedByEmail: "geetam@example.com", // Updated to email
 courseName: "AOS",
@@ -106,7 +98,6 @@ questionAnswered: false,
 isLive: false,
 },
 {
-questionId: 9, // New field
 question: "What is a NoSQL database?",
 askedByEmail: "anukriti@example.com", // Updated to email
 courseName: "SSD",
@@ -115,7 +106,6 @@ questionAnswered: true,
 isLive: true,
 },
 {
-questionId: 10, // New field
 question: "What is a relational database?",
 askedByEmail: "bidisha@example.com", // Updated to email
 courseName: "AOS",
@@ -124,7 +114,6 @@ questionAnswered: false,
 isLive: false,
 },
 {
-questionId: 11, // New field
 question: "What is a primary key?",
 askedByEmail: "anshul@example.com", // Updated to email
 courseName: "SSD",
@@ -133,7 +122,6 @@ questionAnswered: true,
 isLive: true,
 },
 {
-questionId: 12, // New field
 question: "What is a foreign key?",
 askedByEmail: "tanooj@example.com", // Updated to email
 courseName: "AOS",
@@ -218,6 +206,6 @@ db.users.insertMany([
 ]);
 
 //Fetch the count of documents in the collections
-console.log(db.courseMapping.countDocuments());
-console.log(db.Questions.countDocuments());
+console.log(db.courseMappings.countDocuments());
+console.log(db.questions.countDocuments());
 console.log(db.users.countDocuments());

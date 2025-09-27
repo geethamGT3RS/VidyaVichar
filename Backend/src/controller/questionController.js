@@ -1,6 +1,5 @@
+import { now } from "mongoose";
 import Question from "../models/questionsModel.js";
-import CourseMapping from "../models/courseMappingModel.js";
-
 /**
  * Fetches questions for a specific course and instructor, populating the asker's name.
  * @param {string} courseName - The name of the course (e.g., "SSD").
@@ -141,7 +140,36 @@ async function getTACourseQuestions(courseName, taEmail) {
         throw new Error(`Could not retrieve TA question list. Details: ${error.message}`);
     }
 }
+/**
+ * Creates a new question document in the database and automatically assigns a creation timestamp.
+ * * @param {Object} questionData - Object containing question details.
+ * @param {string} questionData.question - The text of the question.
+ * @param {string} questionData.askedByEmail - The email of the student asking the question.
+ * @param {string} questionData.courseName - The name of the course the question is related to.
+ * @param {string} questionData.instructorEmail - The email of the instructor for this course.
+ * @returns {Object} - The newly created Question document.
+ */
+async function createNewQuestion(questionData) {
+    try {
+        const newQuestion = await Question.create({
+            question: questionData.question,
+            askedByEmail: questionData.askedByEmail,
+            courseName: questionData.courseName,
+            instructorEmail: questionData.instructorEmail,
+            questionAnswered: false,
+            isLive: true, // Typically, a new question starts as live
+            
+        });
+
+        // The document returned by Mongoose will now include the MongoDB-generated timestamp.
+        return newQuestion;
+
+    } catch (error) {
+        console.error("Error creating new question:", error);
+        throw new Error(`Could not submit question. Details: ${error.message}`);
+    }
+}
 
 
 
-export { getQuestionsByCourseAndInstructor, getTACourseQuestions };
+export { getQuestionsByCourseAndInstructor, getTACourseQuestions, createNewQuestion };

@@ -1,5 +1,5 @@
 // src/pages/WelcomePage.jsx
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
     ChartBarIcon,
@@ -8,22 +8,73 @@ import {
     AcademicCapIcon,
 } from "@heroicons/react/24/solid";
 
-const COURSES = [
-    { id: "c1", code: "CS301", title: "System Design Principles", description: "Load balancing, caching, sharding, CAP theorem, scalability." },
-    { id: "c2", code: "CS410", title: "Distributed Systems", description: "Distributed algorithms, consensus, cloud patterns." }
-];
-const INSTRUCTORS = [{ id: "u1", name: "Prof. Rao" }, { id: "u2", name: "Dr. Sharma" }];
-
 export default function WelcomePage() {
     const navigate = useNavigate();
-    const [courseId, setCourseId] = React.useState("");
-    const [instrId, setInstrId] = React.useState("");
+    const [courses, setCourses] = useState([]);
+    const [instructors, setInstructors] = useState([]);
+    const [courseName, setCourseName] = useState("");
+    const [instructorName, setInstructorName] = useState("");
+    const [error, setError] = useState(null);
 
-    const course = COURSES.find((c) => c.id === courseId);
+    // Effect to fetch initial course data
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                // As requested, hardcoding the student email for the API call
+                const studentEmail = 'bidisha@example.com';
+                const response = await fetch(`/api/courses/student/${studentEmail}`);
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch data. Server responded with ${response.status}`);
+                }
+                
+                const data = await response.json();
+
+                // Store courses with a placeholder description
+                const formattedCourses = data.map(course => ({
+                    ...course,
+                    description: 'Select a course to see more details.' 
+                }));
+                setCourses(formattedCourses);
+                
+            } catch (e) {
+                console.error("Failed to fetch course data:", e);
+                setError("Could not load course data. Please try again later.");
+            }
+        }
+
+        fetchData();
+    }, []); // Empty dependency array ensures this runs once on component mount
+
+    // Effect to update instructors when a course is selected
+    useEffect(() => {
+        if (courseName) {
+            const selectedCourse = courses.find(c => c.courseName === courseName);
+            if (selectedCourse && selectedCourse.instructorNames) {
+                const formattedInstructors = selectedCourse.instructorNames.map(name => ({
+                    id: name, // Use name as a unique key
+                    name: name
+                }));
+                setInstructors(formattedInstructors);
+            }
+        } else {
+            // If no course is selected, clear the instructors list
+            setInstructors([]);
+        }
+        // Reset instructor selection when the course changes
+        setInstructorName("");
+    }, [courseName, courses]);
+
+
+    const course = courses.find((c) => c.courseName === courseName);
 
     function openBoard(asInstructor = false) {
-        if (!courseId || !instrId) return alert("Please select both Course and Instructor.");
-        navigate(asInstructor ? `/instructor/${courseId}/${instrId}` : `/student/${courseId}/${instrId}`);
+        if (!courseName || !instructorName) {
+            alert("Please select both a Course and an Instructor.");
+            return;
+        }
+        // Note: Passing names in the URL. Ensure your routing setup can handle this.
+        navigate(asInstructor ? `/instructor/${courseName}/${instructorName}` : `/student/${courseName}/${instructorName}`);
     }
 
     function goToDashboard() {
@@ -94,30 +145,32 @@ export default function WelcomePage() {
                     <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden grid md:grid-cols-2 gap-6 p-6 md:p-0">
                         {/* Left - controls */}
                         <div className="p-8">
+                            {error && <div className="p-3 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">{error}</div>}
                             <div className="space-y-4">
                                 <label className="text-sm font-medium text-slate-700">Course</label>
                                 <select
-                                    value={courseId}
-                                    onChange={(e) => setCourseId(e.target.value)}
+                                    value={courseName}
+                                    onChange={(e) => setCourseName(e.target.value)}
                                     className="w-full border border-slate-200 rounded-lg p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-200"
                                 >
                                     <option value="">Choose a course</option>
-                                    {COURSES.map((c) => (
-                                        <option key={c.id} value={c.id}>
-                                            {c.code} — {c.title}
+                                    {courses.map((c) => (
+                                        <option key={c.courseName} value={c.courseName}>
+                                            {c.courseName}
                                         </option>
                                     ))}
                                 </select>
 
                                 <label className="text-sm font-medium text-slate-700">Instructor</label>
                                 <select
-                                    value={instrId}
-                                    onChange={(e) => setInstrId(e.target.value)}
+                                    value={instructorName}
+                                    onChange={(e) => setInstructorName(e.target.value)}
                                     className="w-full border border-slate-200 rounded-lg p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-200"
+                                    disabled={!courseName || instructors.length === 0}
                                 >
                                     <option value="">Choose an instructor</option>
-                                    {INSTRUCTORS.map((i) => (
-                                        <option key={i.id} value={i.id}>
+                                    {instructors.map((i) => (
+                                        <option key={i.id} value={i.name}>
                                             {i.name}
                                         </option>
                                     ))}
@@ -126,14 +179,16 @@ export default function WelcomePage() {
                                 <div className="flex gap-3 mt-3">
                                     <button
                                         onClick={() => openBoard(false)}
-                                        className="flex-1 inline-flex items-center gap-2 justify-center bg-gradient-to-br from-emerald-500 to-teal-600 text-white px-4 py-2 rounded-lg shadow hover:scale-[1.01] transition"
+                                        className="flex-1 inline-flex items-center gap-2 justify-center bg-gradient-to-br from-emerald-500 to-teal-600 text-white px-4 py-2 rounded-lg shadow hover:scale-[1.01] transition disabled:opacity-50"
+                                        disabled={!courseName || !instructorName}
                                     >
                                         <UserGroupIcon className="w-5 h-5" /> Student Board
                                     </button>
 
                                     <button
                                         onClick={() => openBoard(true)}
-                                        className="flex-1 inline-flex items-center gap-2 justify-center border border-emerald-500 text-emerald-700 px-4 py-2 rounded-lg hover:bg-emerald-50 transition"
+                                        className="flex-1 inline-flex items-center gap-2 justify-center border border-emerald-500 text-emerald-700 px-4 py-2 rounded-lg hover:bg-emerald-50 transition disabled:opacity-50"
+                                        disabled={!courseName || !instructorName}
                                     >
                                         <AcademicCapIcon className="w-5 h-5" /> Instructor
                                     </button>
@@ -153,7 +208,7 @@ export default function WelcomePage() {
                                 {course ? (
                                     <>
                                         <div className="mb-2 text-slate-700">
-                                            <strong>{course.code}</strong> — {course.title}
+                                            <strong>{course.courseName}</strong>
                                         </div>
                                         <div className="text-sm text-slate-600">{course.description}</div>
                                     </>
@@ -180,3 +235,4 @@ export default function WelcomePage() {
         </div>
     );
 }
+

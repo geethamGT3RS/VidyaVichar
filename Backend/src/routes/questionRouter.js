@@ -1,6 +1,6 @@
 // src/routes/questionRouter.js
 import express from "express";
-import {getQuestionsByCourseAndInstructor,
+import {createNewQuestion, getQuestionsByCourseAndInstructor,
         getTACourseQuestions
 } from "../controller/questionController.js";
 
@@ -23,6 +23,17 @@ router.get("/ta", async (req, res) => {
     try {
         const questions = await getTACourseQuestions(courseName, taEmail);
         res.json(questions);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+//creating questions
+router.post("/", async (req, res) => {
+    const questionData  = req.body;
+    try {
+        const newQuestion = await createNewQuestion(questionData);
+        res.status(201).json(newQuestion);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
