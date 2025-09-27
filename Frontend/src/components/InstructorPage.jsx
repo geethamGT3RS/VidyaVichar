@@ -14,12 +14,11 @@ import {
   Expects same backend endpoints as before.
 */
 
-const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000/api";
 
 /* Helper: convert backend question => UI question object */
 function mapBackendToUI(q) {
     return {
-        id: q.questionId?.toString?.() ?? String(q._id ?? Date.now()),
+        id: q.questionId,
         text: q.question,
         author: q.askedByEmail,
         createdAt: q.askedAt ?? q.createdAt,
@@ -31,9 +30,9 @@ function mapBackendToUI(q) {
 
 export default function InstructorPage() {
     const navigate = useNavigate();
-    const { courseId = "c1", instrId = "u1" } = useParams();
+    const { courseId, instrId } = useParams();
     const courseName = courseId;
-    const instructorEmail = instrId;
+    const instructorEmail = instrId ? `${instrId.toLowerCase()}@example.com` : "";
 
     const [questions, setQuestions] = useState([]);
     const [filter, setFilter] = useState("all");
@@ -43,10 +42,7 @@ export default function InstructorPage() {
     async function fetchQuestions() {
         setLoading(true);
         try {
-            const url = new URL(`${API_BASE}/questions`);
-            url.searchParams.set("courseName", courseName);
-            url.searchParams.set("instructorEmail", instructorEmail);
-            const res = await fetch(url.toString(), { credentials: "include" });
+            const res = await fetch(`/api/questions/instructor?courseName=${courseId}&instructorEmail=${instructorEmail}`);
             if (!res.ok) {
                 const txt = await res.text();
                 throw new Error(txt || "Failed to fetch questions");
@@ -61,21 +57,20 @@ export default function InstructorPage() {
             setLoading(false);
         }
     }
+    const questionId =
 
-    useEffect(() => {
-        fetchQuestions();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [courseName, instructorEmail]);
+        useEffect(() => {
+            fetchQuestions();
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [courseName, instructorEmail]);
 
     async function markAnswered(id) {
         if (!confirm("Mark this question as answered?")) return;
         try {
-            const res = await fetch(`${API_BASE}/questions/${encodeURIComponent(id)}/answered`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ answeredAt: new Date().toISOString() }),
-                credentials: "include",
-            });
+            const res = await fetch(
+                `/api/questions/${id}/answered?courseName=${courseName}&instructorEmail=${instructorEmail}`,
+                { method: "PATCH" }
+            );
             if (!res.ok) {
                 const txt = await res.text();
                 throw new Error(txt || "Failed to mark answered");
@@ -91,10 +86,10 @@ export default function InstructorPage() {
     async function clearAnswered() {
         if (!confirm("Clear all answered questions?")) return;
         try {
-            const url = new URL(`${API_BASE}/questions/answered`);
-            url.searchParams.set("courseName", courseName);
-            url.searchParams.set("instructorEmail", instructorEmail);
-            const res = await fetch(url.toString(), { method: "DELETE", credentials: "include" });
+            const res = await fetch(
+                `/api/questions/answered?courseName=${courseName}&instructorEmail=${instructorEmail}`,
+                { method: "DELETE" }
+            );
             if (!res.ok) {
                 const txt = await res.text();
                 throw new Error(txt || "Failed to clear answered");
@@ -111,11 +106,8 @@ export default function InstructorPage() {
     async function archiveAndClose() {
         if (!confirm("Archive current session and clear board?")) return;
         try {
-            const res = await fetch(`${API_BASE}/questions/archive`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ courseName, instructorEmail }),
-                credentials: "include",
+            const res = await fetch(`/api/courses/archive?courseName=${courseName}&instructorEmail=${instructorEmail}`, {
+                method: "PATCH"
             });
             if (!res.ok) {
                 const txt = await res.text();
@@ -197,7 +189,7 @@ export default function InstructorPage() {
                     <div className="mb-4">
                         <h2 className="text-2xl font-bold text-slate-800">Instructor Dashboard</h2>
                         <div className="text-sm text-slate-600">
-                            Lecture: <strong>{courseName}</strong> • Instructor: <strong>{instructorEmail}</strong>
+                            Lecture: <strong>{courseName}</strong> • Instructor: <strong>{instrId}</strong>
                         </div>
                     </div>
 

@@ -48,4 +48,15 @@ router.get('/ta/:email', async (req, res) => {
     }
 });
 
+//archive and close the session by updating isLive to false
+router.patch("/archive", async (req, res) => {
+    const { courseName, instructorEmail } = req.query;
+    try {
+        const updatedQuestion = await courseController.endLiveSession(instructorEmail, courseName);
+        res.status(200).json(updatedQuestion);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 export default router;

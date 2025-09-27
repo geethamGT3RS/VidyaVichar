@@ -1,4 +1,3 @@
-import { now } from "mongoose";
 import Question from "../models/questionsModel.js";
 /**
  * Fetches questions for a specific course and instructor, populating the asker's name.
@@ -42,7 +41,8 @@ async function getQuestionsByCourseAndInstructor(courseName, instructorEmail) {
                     questionAnswered: 1,
                     isLive: 1,
                     courseName: 1, // Optional: Include courseName for context
-                    createdAt: 1
+                    createdAt: 1,
+                    answeredAt: 1 
                 }
             },
             
@@ -169,7 +169,60 @@ async function createNewQuestion(questionData) {
         throw new Error(`Could not submit question. Details: ${error.message}`);
     }
 }
+/**
+ * Marks a specific question as answered using its unique questionId.
+ * @param {number} questionId - The unique ID of the question to update.
+ * @returns {Object} - Result object from the updateOne operation.
+ */
+// src/controllers/questionController.js (or wherever this function is)
+
+async function markQuestionAsAnswered(questionId) {
+    console.log("markQuestionAsAnswered received questionId:", questionId);
+
+    try {
+        const updatedQuestion = await Question.findOneAndUpdate(
+            { _id: questionId },
+            { 
+                $set: { 
+                    questionAnswered: true,
+                    answeredAt: new Date() 
+                } 
+            },
+            { new: true }
+        );
+
+        // Check if a question was actually found
+        if (!updatedQuestion) {
+            throw new Error(`Question with ID ${questionId} not found.`);
+        }
+        return updatedQuestion;
+
+    } catch (error) {
+        console.error(`Error marking question ${questionId} as answered:`, error);
+        throw new Error(`Could not mark question as answered. Details: ${error.message}`);
+    }
+}
+
+// clear the answer 
+export async function clearAnswered(courseName, instructorEmail) {
+  // Validate that the required parameters are provided
+    if (!courseName || !instructorEmail) {      
+    throw new Error("courseName and instructorEmail are required.");
+  }
+  try {
+    // Use deleteMany to remove all documents that match the filter
+    const result = await Question.deleteMany({
+      courseName: courseName,
+      instructorEmail: instructorEmail,
+      questionAnswered: true
+    });
+    return result;
+  } catch (error) {
+    // Handle any potential server errors
+    throw new Error("Server error: " + error.message);
+  }
+}
 
 
 
-export { getQuestionsByCourseAndInstructor, getTACourseQuestions, createNewQuestion };
+export { getQuestionsByCourseAndInstructor, getTACourseQuestions, createNewQuestion, markQuestionAsAnswered};

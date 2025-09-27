@@ -1,4 +1,5 @@
 import CourseMapping from "../models/courseMappingModel.js";
+import Question from "../models/questionsModel.js";
 
 
 
@@ -189,37 +190,6 @@ async function endLiveSession(instructorEmail, courseName) {
     }
 }
 
-/**
- * Marks a specific question as answered using its unique questionId.
- * @param {number} questionId - The unique ID of the question to update.
- * @returns {Object} - Result object from the updateOne operation.
- */
-async function markQuestionAsAnswered(questionId) {
-    try {
-        const result = await Question.updateOne(
-            // Filter: Find the document matching the questionId
-            { questionId: questionId },
-            // Update: Set questionAnswered to true and record the current timestamp
-            { 
-                $set: { 
-                    questionAnswered: true,
-                    answeredAt: new Date() // Store the current timestamp
-                } 
-            }
-        );
-
-        // Check if a question was actually found and modified
-        if (result.matchedCount === 0) {
-            throw new Error(`Question with ID ${questionId} not found.`);
-        }
-        
-        return result;
-
-    } catch (error) {
-        console.error(`Error marking question ${questionId} as answered:`, error);
-        throw new Error(`Could not mark question as answered. Details: ${error.message}`);
-    }
-}
 
 
 
@@ -229,5 +199,4 @@ export default {
     getTACourses,
     getInstructorCourses,
     endLiveSession,
-    markQuestionAsAnswered
 };
