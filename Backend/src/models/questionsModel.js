@@ -1,11 +1,6 @@
 import mongoose from "mongoose";
 
 const QuestionSchema = new mongoose.Schema({
-    questionId: {
-        type: Number,
-        required: true,
-        unique: true
-    },
     question: {
         type: String,
         required: true,
@@ -30,14 +25,10 @@ const QuestionSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    askedAt: {
-        type: Date,
-        default: Date.now,
-    },
     answeredAt: {
         type: Date,
-    }
-    
-});
+    },
+ }, { timestamps: true });
 
-export default QuestionSchema;
+const Questions = mongoose.model("questions", QuestionSchema);
+export default Questions;

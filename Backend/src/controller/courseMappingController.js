@@ -1,5 +1,5 @@
-import CourseMappingSchema from "../models/courseMappingModel";
-import User from "../models/userModel.js";
+import CourseMapping from "../models/courseMappingModel.js";
+
 
 
 /**
