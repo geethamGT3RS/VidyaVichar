@@ -8,6 +8,8 @@ import OTPVerification from './components/OTPVerification'
 import Login from './components/Login'
 import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
+import WelcomeStudent from './components/WelcomeStudent';
+import WelcomeInstructor from './components/WelcomeInstructor';
 export default function App() {
   return (
     <Router>
