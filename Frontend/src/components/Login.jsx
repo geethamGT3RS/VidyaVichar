@@ -9,22 +9,20 @@ const Login = () => {
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('student');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
 
-    fetch('http://localhost:8000/api/login', {
+    fetch('http://localhost:8000/api/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         email: email,
-        password: password,
-        role: role
+        password: password
       })
     })
     .then(response => {
@@ -35,30 +33,45 @@ const Login = () => {
       }
     })
     .then(data => {
-      if (data.token) {
+      if (data.token && data.user) {
         localStorage.setItem('authToken', data.token);
-        localStorage.setItem('userEmail', email);
-        localStorage.setItem('userRole', role);
+        localStorage.setItem('userEmail', data.user.email);
+        localStorage.setItem('userRole', data.user.role);
+        localStorage.setItem('userName', data.user.name);
         
         toast.success('Login successful! 🎉');
+        
+        // Role-based redirect using the role from backend response
         setTimeout(() => {
-          navigate('/welcome');
+          if (data.user.role === 'student') {
+            navigate('/welcomestudent');
+          } else if (data.user.role === 'instructor') {
+            navigate('/welcomeinstructor');
+          } else if (data.user.role === 'ta') {
+            navigate('/welcometa');
+          } else {
+            navigate('/welcome'); // fallback
+          }
         }, 2000);
       }
       setLoading(false);
     })
     .catch(error => {
+      console.log('Error details:', error);
+      
       if (error.error) {
         toast.error(error.error);
+      } else if (error.message) {
+        toast.error(error.message);
       } else {
-        toast.error('Something went wrong');
+        toast.error('Login failed. Please check your credentials and try again.');
       }
       setLoading(false);
     });
   };
 
   const goToSignup = () => {
-    navigate('/');
+    navigate('/createuser');
   };
 
   const goToForgotPassword = () => {
@@ -107,18 +120,6 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)} 
               required 
             />
-          </div>
-
-          <div className="form-group dropdown-group">
-            <select 
-              className="form-select" 
-              value={role} 
-              onChange={(e) => setRole(e.target.value)}
-            >
-              <option value="student">Student</option>
-              <option value="instructor">Instructor</option>
-              <option value="ta">TA</option>
-            </select>
           </div>
 
           <div className="forgot-password-section">

@@ -14,12 +14,14 @@ export default function App() {
       <Routes>
         <Route path="/student/:courseId/:instrId" element={<StudentQuestions />} />
         <Route path="/instructor/:courseId/:instrId" element={<InstructorPage />} />
-        <Route path="/" element={<UserAuth/>}/>
-        <Route path="/login" element={<Login/>} />
-       <Route path="/getotp" element={<OTPVerification/>} />
-       <Route path="/welcome" element={<WelcomePage/>} />
-       <Route path="/forgetpasswordotp" element={<ForgotPassword/>}/> 
-       <Route path="/resetpassword" element={<ResetPassword/>}/> 
+        <Route path="/createuser" element={<UserAuth/>}/>
+          <Route path="/" element={<Login/>} />
+          <Route path="/getotp" element={<OTPVerification/>} />
+          <Route path="/welcome" element={<h1>Welcome</h1>} />
+          <Route path="/welcomestudent" element={<WelcomeStudent/>} />
+          <Route path="/welcomeinstructor" element={<WelcomeInstructor/>} />
+          <Route path="/forgetpasswordotp" element={<ForgotPassword/>}/> 
+          <Route path="/resetpassword" element={<ResetPassword/>}/> 
        </Routes>
     </Router>
   );

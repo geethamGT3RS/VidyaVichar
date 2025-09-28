@@ -26,7 +26,7 @@ const OTPVerification = () => {
         autoClose: 2000,
       });
       setTimeout(() => {
-        navigate('/login');
+        navigate('/');
       }, 2000);
     } catch (error) {
       let errorMessage = 'Something went wrong. Please try again.';

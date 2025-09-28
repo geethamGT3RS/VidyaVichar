@@ -39,7 +39,7 @@ const ForgotPassword = () => {
   };
 
   const goToLogin = () => {
-    navigate('/login');
+    navigate('/');
   };
 
   return (

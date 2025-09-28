@@ -38,7 +38,7 @@ const ResetPassword = () => {
     .then(data => {
       toast.success('Password reset successfully! 🎉');
       setTimeout(() => {
-        navigate('/login');
+        navigate('/');
       }, 2000);
       setLoading(false);
     })
@@ -53,7 +53,7 @@ const ResetPassword = () => {
   };
 
   const goToLogin = () => {
-    navigate('/login');
+    navigate('/');
   };
 
   return (

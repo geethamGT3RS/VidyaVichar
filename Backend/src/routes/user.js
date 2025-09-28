@@ -6,8 +6,8 @@ const verifyotp=require("../controllers/verifyotp")
 const forgetpassword= require("../controllers/forgetpasswordotp")
 const resetpassword=require("../controllers/resetPassword")
 const router=express.Router()
-router.post("/",createUser);
-router.post("/login",loginuser);
+router.post("/createuser",createUser);
+router.post("/",loginuser);
 router.post("/getotp",getotp);
 router.post("/verifyotp",verifyotp);
 router.post("/forgetpasswordotp",forgetpassword)

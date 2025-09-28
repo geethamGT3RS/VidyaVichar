@@ -17,7 +17,7 @@ const UserAuth = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const createUserResponse = await axios.post('http://localhost:8000/api/', {
+      const createUserResponse = await axios.post('http://localhost:8000/api/createuser', {  // Changed from /api/ to /api/createuser
         name: name,
         email: email,
         password: password,
@@ -64,7 +64,7 @@ const UserAuth = () => {
   };
 
   const handleSignInClick = () => {
-    navigate('/login');
+    navigate('/');
   };
 
   return (

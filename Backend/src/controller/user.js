@@ -16,7 +16,7 @@ const createUser=async (req,res)=>{
     }
     const saltRounds = 10;
     const hashed = await bcrypt.hash(password, saltRounds);
-    const newuser= new User({email,password:hashed,role});
+    const newuser= new User({name,email,password:hashed,role});
     await newuser.save();
     res.json({user:newuser})
     
