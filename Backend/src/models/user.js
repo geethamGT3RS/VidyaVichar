@@ -23,6 +23,12 @@ const userSchema = mongoose.Schema({
     type:Boolean,
     default:false
   },
+  passwordResetCode:{
+    type:String
+  },
+  passwordResetCodeExpiresAt:{ 
+    Date
+  },
   verificationCode:{
     type:String
   },
