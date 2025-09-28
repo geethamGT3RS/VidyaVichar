@@ -15,7 +15,7 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
 
-    fetch('http://localhost:8000/api/', {
+    fetch(`/api`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -34,24 +34,14 @@ const Login = () => {
     })
     .then(data => {
       if (data.token && data.user) {
-        localStorage.setItem('authToken', data.token);
-        localStorage.setItem('userEmail', data.user.email);
-        localStorage.setItem('userRole', data.user.role);
-        localStorage.setItem('userName', data.user.name);
+      localStorage.setItem('authToken', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user)); 
         
         toast.success('Login successful! 🎉');
         
         // Role-based redirect using the role from backend response
         setTimeout(() => {
-          if (data.user.role === 'student') {
-            navigate('/welcomestudent');
-          } else if (data.user.role === 'instructor') {
-            navigate('/welcomeinstructor');
-          } else if (data.user.role === 'ta') {
-            navigate('/welcometa');
-          } else {
             navigate('/welcome'); // fallback
-          }
         }, 2000);
       }
       setLoading(false);

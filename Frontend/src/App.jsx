@@ -8,6 +8,8 @@ import OTPVerification from './components/OTPVerification'
 import Login from './components/Login'
 import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
+import Admin from './components/AdminPage'
+
 export default function App() {
   return (
     <Router>
@@ -17,11 +19,10 @@ export default function App() {
         <Route path="/createuser" element={<UserAuth/>}/>
           <Route path="/" element={<Login/>} />
           <Route path="/getotp" element={<OTPVerification/>} />
-          <Route path="/welcome" element={<h1>Welcome</h1>} />
-          <Route path="/welcomestudent" element={<WelcomeStudent/>} />
-          <Route path="/welcomeinstructor" element={<WelcomeInstructor/>} />
+          <Route path="/welcome" element={<WelcomePage/>} />
           <Route path="/forgetpasswordotp" element={<ForgotPassword/>}/> 
           <Route path="/resetpassword" element={<ResetPassword/>}/> 
+          <Route path="/admin" element={<Admin/>}/> 
        </Routes>
     </Router>
   );

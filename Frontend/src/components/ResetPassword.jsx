@@ -17,7 +17,7 @@ const ResetPassword = () => {
     e.preventDefault();
     setLoading(true);
 
-    fetch('http://localhost:8000/api/resetpassword', {
+    fetch('/api/resetpassword', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

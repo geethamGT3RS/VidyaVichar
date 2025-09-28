@@ -1,5 +1,5 @@
 // src/pages/WelcomePage.jsx
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
     ChartBarIcon,
@@ -8,23 +8,123 @@ import {
     AcademicCapIcon,
 } from "@heroicons/react/24/solid";
 
-const COURSES = [
-    { id: "c1", code: "CS301", title: "System Design Principles", description: "Load balancing, caching, sharding, CAP theorem, scalability." },
-    { id: "c2", code: "CS410", title: "Distributed Systems", description: "Distributed algorithms, consensus, cloud patterns." }
-];
-const INSTRUCTORS = [{ id: "u1", name: "Prof. Rao" }, { id: "u2", name: "Dr. Sharma" }];
-
 export default function WelcomePage() {
     const navigate = useNavigate();
-    const [courseId, setCourseId] = React.useState("");
-    const [instrId, setInstrId] = React.useState("");
+    const [courses, setCourses] = useState([]);
+    const [instructors, setInstructors] = useState([]);
+    const [courseName, setCourseName] = useState("");
+    const [instructorName, setInstructorName] = useState("");
+    const [error, setError] = useState(null);
+    const [user, setUser] = useState(null);
 
-    const course = COURSES.find((c) => c.id === courseId);
+    // Effect to get user from local storage
+    useEffect(() => {
+        const storedUser = localStorage.getItem("user");
+        const authToken = localStorage.getItem("authToken");
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+        } else {
+            // Handle case where user is not logged in
+            navigate("/");
+        }
+    }, [navigate]);
+     // Effect to set a mock user for testing
+    /*useEffect(() => {
+        // Hardcode user as an instructor for testing purposes
+        const mockInstructor = {
+            name: 'Bidisha',
+            email: 'bidisha@example.com',
+            role: 'student'
+        };
+        setUser(mockInstructor);
+    }, []);*/
 
-    function openBoard(asInstructor = false) {
-        if (!courseId || !instrId) return alert("Please select both Course and Instructor.");
-        navigate(asInstructor ? `/instructor/${courseId}/${instrId}` : `/student/${courseId}/${instrId}`);
+    // Effect to fetch initial course data based on user role
+    useEffect(() => {
+        if (!user) return;
+
+        async function fetchData() {
+            try {
+                const { email, role } = user;
+                let apiUrl = "";
+
+                if (role === 'student') {
+                    apiUrl = `/api/courses/student/${email}`;
+                } else if (role === 'instructor') {
+                    apiUrl = `/api/courses/instructor/${email}`;
+                } else {
+                    setError("Invalid user role.");
+                    return;
+                }
+                
+                const response = await fetch(apiUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch data. Server responded with ${response.status}`);
+                }
+                
+                const data = await response.json();
+
+                const formattedCourses = data.map(course => ({
+                    ...course,
+                    description: 'Select a course to see more details.' 
+                }));
+                setCourses(formattedCourses);
+                
+            } catch (e) {
+                console.error("Failed to fetch course data:", e);
+                setError("Could not load course data. Please try again later.");
+            }
+        }
+
+        fetchData();
+    }, [user]);
+
+    // Effect to update instructors when a course is selected (for students)
+    useEffect(() => {
+        if (user?.role === 'student' && courseName) {
+            const selectedCourse = courses.find(c => c.courseName === courseName);
+            if (selectedCourse && selectedCourse.instructorNames) {
+                const formattedInstructors = selectedCourse.instructorNames.map(name => ({
+                    id: name,
+                    name: name
+                }));
+                setInstructors(formattedInstructors);
+            }
+        } else {
+            setInstructors([]);
+        }
+        setInstructorName("");
+    }, [courseName, courses, user]);
+
+
+    const course = courses.find((c) => c.courseName === courseName);
+
+    function openBoard() {
+        if (user?.role === 'student') {
+            if (!courseName || !instructorName) {
+                alert("Please select both a Course and an Instructor.");
+                return;
+            }
+            navigate(`/student/${courseName}/${instructorName}`);
+        } else if (user?.role === 'instructor') {
+            if (!courseName) {
+                alert("Please select a Course.");
+                return;
+            }
+            // For an instructor, the instructorName is their own email/name from the user object
+            navigate(`/instructor/${courseName}/${user.email}`);
+        }
     }
+    
+    function openAsInstructorBoard() {
+        if (!courseName || !instructorName) {
+            alert("Please select both a Course and an Instructor.");
+            return;
+        }
+        navigate(`/instructor/${courseName}/${instructorName}`);
+    }
+
 
     function goToDashboard() {
         navigate("/dashboard");
@@ -33,7 +133,7 @@ export default function WelcomePage() {
     function handleLogout() {
         localStorage.removeItem("authToken");
         localStorage.removeItem("user");
-        navigate("/login");
+        navigate("/");
     }
 
     return (
@@ -91,52 +191,71 @@ export default function WelcomePage() {
             {/* Main content */}
             <main className="flex-grow flex items-center justify-center p-6">
                 <div className="w-full max-w-5xl">
+                     {user && (
+                        <h2 className="text-3xl font-bold text-slate-800 mb-4 text-center">
+                            Welcome, {user.name}!
+                        </h2>
+                    )}
                     <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden grid md:grid-cols-2 gap-6 p-6 md:p-0">
                         {/* Left - controls */}
                         <div className="p-8">
+                            {error && <div className="p-3 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">{error}</div>}
                             <div className="space-y-4">
                                 <label className="text-sm font-medium text-slate-700">Course</label>
                                 <select
-                                    value={courseId}
-                                    onChange={(e) => setCourseId(e.target.value)}
+                                    value={courseName}
+                                    onChange={(e) => setCourseName(e.target.value)}
                                     className="w-full border border-slate-200 rounded-lg p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-200"
                                 >
                                     <option value="">Choose a course</option>
-                                    {COURSES.map((c) => (
-                                        <option key={c.id} value={c.id}>
-                                            {c.code} — {c.title}
+                                    {courses.map((c) => (
+                                        <option key={c.courseName} value={c.courseName}>
+                                            {c.courseName}
                                         </option>
                                     ))}
                                 </select>
 
-                                <label className="text-sm font-medium text-slate-700">Instructor</label>
-                                <select
-                                    value={instrId}
-                                    onChange={(e) => setInstrId(e.target.value)}
-                                    className="w-full border border-slate-200 rounded-lg p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-200"
-                                >
-                                    <option value="">Choose an instructor</option>
-                                    {INSTRUCTORS.map((i) => (
-                                        <option key={i.id} value={i.id}>
-                                            {i.name}
-                                        </option>
-                                    ))}
-                                </select>
+                                {user?.role === 'student' && (
+                                    <>
+                                        <label className="text-sm font-medium text-slate-700">Instructor</label>
+                                        <select
+                                            value={instructorName}
+                                            onChange={(e) => setInstructorName(e.target.value)}
+                                            className="w-full border border-slate-200 rounded-lg p-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-200"
+                                            disabled={!courseName || instructors.length === 0}
+                                        >
+                                            <option value="">Choose an instructor</option>
+                                            {instructors.map((i) => (
+                                                <option key={i.id} value={i.name}>
+                                                    {i.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </>
+                                )}
 
                                 <div className="flex gap-3 mt-3">
-                                    <button
-                                        onClick={() => openBoard(false)}
-                                        className="flex-1 inline-flex items-center gap-2 justify-center bg-gradient-to-br from-emerald-500 to-teal-600 text-white px-4 py-2 rounded-lg shadow hover:scale-[1.01] transition"
-                                    >
-                                        <UserGroupIcon className="w-5 h-5" /> Student Board
-                                    </button>
+                                    {user?.role === 'student' && (
+                                        <>
+                                            <button
+                                                onClick={openBoard}
+                                                className="flex-1 inline-flex items-center gap-2 justify-center bg-gradient-to-br from-emerald-500 to-teal-600 text-white px-4 py-2 rounded-lg shadow hover:scale-[1.01] transition disabled:opacity-50"
+                                                disabled={!courseName || !instructorName}
+                                            >
+                                                <UserGroupIcon className="w-5 h-5" /> Student Board
+                                            </button>
 
-                                    <button
-                                        onClick={() => openBoard(true)}
-                                        className="flex-1 inline-flex items-center gap-2 justify-center border border-emerald-500 text-emerald-700 px-4 py-2 rounded-lg hover:bg-emerald-50 transition"
-                                    >
-                                        <AcademicCapIcon className="w-5 h-5" /> Instructor
-                                    </button>
+                                        </>
+                                    )}
+                                     {user?.role === 'instructor' && (
+                                        <button
+                                            onClick={openBoard}
+                                            className="w-full inline-flex items-center gap-2 justify-center bg-gradient-to-br from-indigo-500 to-purple-600 text-white px-4 py-2 rounded-lg shadow hover:scale-[1.01] transition disabled:opacity-50"
+                                            disabled={!courseName}
+                                        >
+                                            <AcademicCapIcon className="w-5 h-5" /> Go to Instructor Board
+                                        </button>
+                                    )}
                                 </div>
                             </div>
 
@@ -153,7 +272,7 @@ export default function WelcomePage() {
                                 {course ? (
                                     <>
                                         <div className="mb-2 text-slate-700">
-                                            <strong>{course.code}</strong> — {course.title}
+                                            <strong>{course.courseName}</strong>
                                         </div>
                                         <div className="text-sm text-slate-600">{course.description}</div>
                                     </>
