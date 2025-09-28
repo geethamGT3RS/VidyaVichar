@@ -12,7 +12,7 @@ This application is built using the **MERN** stack, which ensures questions are 
 
 ### 💭 Assumptions
 The following assumptions were made during the development of this application:
-* The Questions DB is live and relevant for only a term and the data will be refreshed at the end of the term.
+* The VidyaVichar  Questions DB is live and relevant for only a term and the data will be refreshed at the end of the term.
 * Users will be signing in with their institute email ID and map their name to the email ID in the signup form.
 * An Admin user will upload the mapping of a Course to Instructor to TA to Students before any other users sign in.
 * The system will not handle any actions related to answers and any next steps as getting vocal answers is not possible at the moment.
@@ -45,12 +45,6 @@ The Admin manages course mappings by uploading CSV files. The Admin ID will uplo
 * They can see the current live questions.
 * Instructors can mark a question as answered and can mark the class as closed, which makes the questions not visible to instructor or student roles.
 
-#### **5. TA View**
-* TAs select the course to work on for the session.
-* After entering the course, the TA sees all the questions that are not answered and not live (archived).
-* TAs can mark the questions as answered based on whatever next steps they need to perform.
-
----
 
 ### 🖼️ Solution Diagram
 This diagram illustrates the architecture of the VidyaVichar application, showing how the different components of the MERN stack interact to provide a seamless user experience.
@@ -88,6 +82,7 @@ To set up the application, we need to follow the following steps.
 2.  **Install Backend Dependencies**:
     Go to the backend folder and run the following commands.
     ```bash
+    npm install
     npm install express
     npm install dotenv
     npm install -g nodemon
@@ -100,8 +95,8 @@ To set up the application, we need to follow the following steps.
     npm install
     ```
 4.  **Run the Application (in bash)**:
-    * In the `backend` folder, run `node server.js`.
-    * In the `frontend` folder, run `npm start`.
+    * In the `Backend` folder, run `node server.js`.
+    * In the `Frontend` folder, run `npm start`.
 
 Git Repository: https://github.com/geethamGT3RS/VidyaVichar.
 
