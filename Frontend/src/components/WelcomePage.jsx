@@ -20,15 +20,16 @@ export default function WelcomePage() {
     // Effect to get user from local storage
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
+        const authToken = localStorage.getItem("authToken");
         if (storedUser) {
             setUser(JSON.parse(storedUser));
         } else {
             // Handle case where user is not logged in
-            navigate("/login");
+            navigate("/");
         }
     }, [navigate]);
      // Effect to set a mock user for testing
-   /* useEffect(() => {
+    /*useEffect(() => {
         // Hardcode user as an instructor for testing purposes
         const mockInstructor = {
             name: 'Bidisha',
@@ -112,7 +113,7 @@ export default function WelcomePage() {
                 return;
             }
             // For an instructor, the instructorName is their own email/name from the user object
-            navigate(`/instructor/${courseName}/${user.name || user.email}`);
+            navigate(`/instructor/${courseName}/${user.email}`);
         }
     }
     
@@ -132,7 +133,7 @@ export default function WelcomePage() {
     function handleLogout() {
         localStorage.removeItem("authToken");
         localStorage.removeItem("user");
-        navigate("/login");
+        navigate("/");
     }
 
     return (

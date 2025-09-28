@@ -13,7 +13,7 @@ const ForgotPassword = () => {
     e.preventDefault();
     setLoading(true);
 
-    fetch('http://localhost:8000/api/forgetpasswordotp', {
+    fetch('/api/forgetpasswordotp', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

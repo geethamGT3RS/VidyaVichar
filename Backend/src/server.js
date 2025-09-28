@@ -1,8 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
-import userRouter from "./routes/userRouter.js";
 import questionRouter from "./routes/questionRouter.js";
 import courseMappingRouter from "./routes/courseMappingRouter.js";
+import userRouter from "./routes/userRouter.js";
 import { connectDB } from "./config/db.js";
 
 
@@ -15,6 +15,7 @@ app.use(express.json());
 app.use("/api/questions", questionRouter);
 app.use("/api/users", userRouter);
 app.use("/api/courses", courseMappingRouter);
+app.use("/api/", userRouter);
 
 const PORT = process.env.PORT || 5001;
 if (process.env.NODE_ENV !== "test") {

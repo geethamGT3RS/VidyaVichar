@@ -17,7 +17,7 @@ const OTPVerification = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:8000/api/verifyotp', {
+      const response = await axios.post('/api/verifyotp', {
         email: email,
         otp: otp
       });
@@ -45,7 +45,7 @@ const OTPVerification = () => {
   const handleResendCode = async () => {
     setResendLoading(true);
     try {
-      const response = await axios.post('http://localhost:8000/api/getotp', {
+      const response = await axios.post('/api/getotp', {
         email: email
       });
       toast.success('New OTP sent to your email! 📧', {

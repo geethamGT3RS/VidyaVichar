@@ -27,12 +27,33 @@ export default function StudentQuestions() {
     const [text, setText] = useState("");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const storedUser = localStorage.getItem("user");
+    const user = storedUser ? JSON.parse(storedUser) : null;
+    const [instructorEmail, setInstructorEmail] = useState(null);
 
-    // Construct the full instructor email from the URL parameter
-    const instructorEmail = instrId ? `${instrId.toLowerCase()}@example.com` : "";
-    // TODO: Replace this with a real student email from an authentication context
-    const studentEmail = "bidisha@example.com";
+     useEffect(() => {
+        async function fetchInstructorEmail(name) {
+            if (!name) return; // Don't fetch if instrId is not ready
+            
+            const url = new URL('/api/getuseremail', window.location.origin);
+            url.searchParams.append('name', name);
+            
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                setInstructorEmail(data.email); // Store the email string in state
+            } catch (error) {
+                console.error("Could not fetch instructor email:", error);
+                setError("Failed to verify instructor details.");
+            }
+        }
 
+        fetchInstructorEmail(instrId);
+    }, [instrId]);
+    
     const fetchQuestions = useCallback(async () => {
         // Use a relative path to leverage the proxy and avoid CORS issues
         try {
@@ -101,7 +122,7 @@ export default function StudentQuestions() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     question: t,
-                    askedByEmail: studentEmail,
+                    askedByEmail: user.email,
                     courseName: courseId,
                     instructorEmail: instructorEmail, // Use the full email
                 }),
@@ -142,7 +163,7 @@ export default function StudentQuestions() {
                         </div>
                     </div>
                     <div className="flex gap-2 mt-3 sm:mt-0">
-                        <Link to="/" className="flex items-center gap-2 px-3 py-2 border rounded-md text-slate-700 bg-white hover:bg-slate-50 transition">
+                        <Link to="/welcome" className="flex items-center gap-2 px-3 py-2 border rounded-md text-slate-700 bg-white hover:bg-slate-50 transition">
                             <HomeIcon className="w-5 h-5" /> Home
                         </Link>
                         <button

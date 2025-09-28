@@ -32,11 +32,40 @@ export default function InstructorPage() {
     const navigate = useNavigate();
     const { courseId, instrId } = useParams();
     const courseName = courseId;
-    const instructorEmail = instrId ? `${instrId.toLowerCase()}@example.com` : "";
-
+    const instructorEmail = instrId ;
+    const [instructorName, setInstructorName] = useState(instrId);
     const [questions, setQuestions] = useState([]);
     const [filter, setFilter] = useState("all");
     const [loading, setLoading] = useState(false);
+
+    // Add this useEffect hook inside your InstructorPage component
+    useEffect(() => {
+        // Don't run if instrId isn't available yet
+        if (!instrId) return;
+
+        const fetchInstructorName = async () => {
+            try {
+                const response = await fetch(`/api/getusername?email=${instrId}`);
+                if (!response.ok) {
+                    // If the fetch fails, we'll just keep showing the email
+                    console.error("Failed to fetch instructor name");
+                    return;
+                }
+                const data = await response.json();
+
+                // Assuming your API returns { userName: 'Bidisha Shaw' }
+                // based on the database document you showed me.
+                if (data.userName) {
+                    setInstructorName(data.userName);
+                }
+
+            } catch (error) {
+                console.error("Error fetching instructor name:", error);
+            }
+        };
+
+        fetchInstructorName();
+    }, [instrId]); // This effect runs when the component mounts and when instrId changes
 
     // Fetch questions from backend
     async function fetchQuestions() {
@@ -176,7 +205,7 @@ export default function InstructorPage() {
                             className="inline-flex items-center gap-2 px-3 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition"
                         >
                             <ArchiveBoxArrowDownIcon className="w-5 h-5" />
-                            <span className="hidden md:inline">Archive & Close</span>
+                            <span className="hidden md:inline">End class</span>
                         </button>
                     </div>
                 </div>
@@ -189,7 +218,7 @@ export default function InstructorPage() {
                     <div className="mb-4">
                         <h2 className="text-2xl font-bold text-slate-800">Instructor Dashboard</h2>
                         <div className="text-sm text-slate-600">
-                            Lecture: <strong>{courseName}</strong> • Instructor: <strong>{instrId}</strong>
+                            Lecture: <strong>{courseName}</strong> • Instructor: <strong>{instructorName}</strong>
                         </div>
                     </div>
 
@@ -204,14 +233,7 @@ export default function InstructorPage() {
                             </select>
                         </div>
 
-                        <div className="ml-auto flex gap-2">
-                            <button onClick={clearAnswered} className="flex items-center gap-1 px-3 py-2 border rounded text-slate-700">
-                                <TrashIcon className="w-5 h-5 text-rose-600" /> Clear Answered
-                            </button>
-                            <button onClick={copyJSON} className="flex items-center gap-1 px-3 py-2 border rounded text-slate-700">
-                                <ClipboardDocumentIcon className="w-5 h-5 text-indigo-600" /> Copy JSON
-                            </button>
-                        </div>
+                      
                     </div>
 
                     {/* Questions */}

@@ -17,13 +17,13 @@ const UserAuth = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const createUserResponse = await axios.post('http://localhost:8000/api/createuser', {  // Changed from /api/ to /api/createuser
+      const createUserResponse = await axios.post('/api/createuser', {  // Changed from /api/ to /api/createuser
         name: name,
         email: email,
         password: password,
         role: role
       });
-      const otpResponse = await axios.post('http://localhost:8000/api/getotp', {
+      const otpResponse = await axios.post('/api/getotp', {
         email: email
       });
       toast.success('Account created! OTP sent to your email 📧', {
