@@ -3,13 +3,13 @@ const createUser = require("../controllers/user")
 const loginuser=require("../controllers/loginuser")
 const getotp=require("../controllers/getotp")
 const verifyotp=require("../controllers/verifyotp")
+const forgetpassword= require("../controllers/forgetpasswordotp")
+const resetpassword=require("../controllers/resetPassword")
 const router=express.Router()
-router.get('/',(req,res)=>{
-    res.send("<h1>Hello form the backend</h1>")
-})
-router.post("/createuser",createUser);
+router.post("/",createUser);
 router.post("/login",loginuser);
 router.post("/getotp",getotp);
 router.post("/verifyotp",verifyotp);
-router.post
+router.post("/forgetpasswordotp",forgetpassword)
+router.post("/resetpassword",resetpassword)
 module.exports=router;  
