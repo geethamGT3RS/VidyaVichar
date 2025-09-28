@@ -10,7 +10,7 @@ const CourseMappingSchema = new mongoose.Schema({
         type: [String], // Array of strings for instructors
         required: true,
     },
-    taName: {
+    taEmail: {
         type: [String], // Array of strings for TAs
     },
     studentName: {
@@ -19,4 +19,5 @@ const CourseMappingSchema = new mongoose.Schema({
     },
 });
 
-export default CourseMappingSchema
+const coursemappings = mongoose.model("coursemappings", CourseMappingSchema);
+export default coursemappings;
