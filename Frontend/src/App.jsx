@@ -3,15 +3,24 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import WelcomePage from "./components/WelcomePage";
 import StudentQuestions from "./components/StudentPage";
 import InstructorPage from "./components/InstructorPage";
-
+import UserAuth from './components/UserAuth'
+import OTPVerification from './components/OTPVerification'
+import Login from './components/Login'
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
 export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<WelcomePage />} />
         <Route path="/student/:courseId/:instrId" element={<StudentQuestions />} />
         <Route path="/instructor/:courseId/:instrId" element={<InstructorPage />} />
-      </Routes>
+        <Route path="/" element={<UserAuth/>}/>
+        <Route path="/login" element={<Login/>} />
+       <Route path="/getotp" element={<OTPVerification/>} />
+       <Route path="/welcome" element={<WelcomePage/>} />
+       <Route path="/forgetpasswordotp" element={<ForgotPassword/>}/> 
+       <Route path="/resetpassword" element={<ResetPassword/>}/> 
+       </Routes>
     </Router>
   );
 }
