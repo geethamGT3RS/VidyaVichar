@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import questionRouter from "./routes/questionRouter.js";
 import courseMappingRouter from "./routes/courseMappingRouter.js";
 import userRouter from "./routes/userRouter.js";
+import adminRouter from "./routes/adminRouter.js";
 import { connectDB } from "./config/db.js";
 
 
@@ -16,6 +17,7 @@ app.use("/api/questions", questionRouter);
 app.use("/api/users", userRouter);
 app.use("/api/courses", courseMappingRouter);
 app.use("/api/", userRouter);
+app.use("/api/admin", adminRouter);
 
 const PORT = process.env.PORT || 5001;
 if (process.env.NODE_ENV !== "test") {

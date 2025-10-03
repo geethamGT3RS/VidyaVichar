@@ -1,22 +1,14 @@
-import CourseMappingSchema from "../models/courseMappingModel";
+import CourseMapping from "../models/courseMappingModel.js";
 
 async function uploadInstructorMapping(courseName, instructorEmail) {
     try {
         // Use findOneAndUpdate with upsert: true
         const result = await CourseMapping.findOneAndUpdate(
-            // 1. QUERY: Find a document where the courseName matches
             { courseName: courseName },
-
-            // 2. UPDATE: Set the description and conditionally push the new email
             {
-                // $set ensures the description is updated every time
-                $set: { courseDesc: courseDesc },
-                
                 // $addToSet ensures the email is only added if it's NOT already in the array
                 $addToSet: { instructorEmail: instructorEmail }
             },
-
-            // 3. OPTIONS: 
             {
                 new: true, // Return the modified document rather than the original
                 upsert: true, // IMPORTANT: Create the document if it doesn't exist

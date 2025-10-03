@@ -5,18 +5,6 @@ import adminController from '../controller/adminController.js';
 
 const router = express.Router();
 
-// Middleware for basic validation of course-related requests
-const validateCourseRequest = (req, res, next) => {
-    const { courseName } = req.body;
-    if (!courseName) {
-        return res.status(400).json({ message: 'Course name is a required field.' });
-    }
-    next();
-};
-
-
-// --- POST Routes for Uploading Mappings ---
-
 /**
  * @route   POST /api/courses/instructor-mapping
  * @desc    Create or update a course with its description and add an instructor.
@@ -25,7 +13,7 @@ const validateCourseRequest = (req, res, next) => {
 router.post("/instructor-mapping", async (req, res) => {
     const { courseName, instructorEmail } = req.body;
 
-    if (!courseName || !courseDesc || !instructorEmail) {
+    if (!courseName  || !instructorEmail) {
         return res.status(400).json({ message: "Missing required fields: courseName, and instructorEmail." });
     }
 
@@ -42,7 +30,7 @@ router.post("/instructor-mapping", async (req, res) => {
  * @desc    Add a TA to a course. Creates the course if it doesn't exist.
  * @access  Private (assumed)
  */
-router.post("/ta-mapping", validateCourseRequest, async (req, res) => {
+router.post("/ta-mapping", async (req, res) => {
     const { courseName, taEmail } = req.body;
 
     if (!taEmail) {
@@ -62,7 +50,7 @@ router.post("/ta-mapping", validateCourseRequest, async (req, res) => {
  * @desc    Add a student to a course. Creates the course if it doesn't exist.
  * @access  Private (assumed)
  */
-router.post("/student-mapping", validateCourseRequest, async (req, res) => {
+router.post("/student-mapping", async (req, res) => {
     const { courseName, studentEmail } = req.body;
 
     if (!studentEmail) {

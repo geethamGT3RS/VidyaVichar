@@ -6,16 +6,14 @@ const CourseMappingSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    instructorName: {
+    instructorEmail: {
         type: [String], // Array of strings for instructors
-        required: true,
     },
     taEmail: {
         type: [String], // Array of strings for TAs
     },
-    studentName: {
+    studentEmail: {
         type: [String], // Array of strings for students
-        required: true,
     },
 });
 

@@ -10,231 +10,285 @@
 // https://www.mongodb.com/docs/mongodb-vscode/playgrounds/
 
 // Select the database to use.
-use("VidyaVichar");
+// Switch to (or create) database "VidyaVichar"
+use VidyaVichar
 
-// insert collections to the Courses database
-db.courseMappings.drop();
-db.courseMappings.insertMany([
-  {
-    courseName: "SSD",
-    instructorEmail: ["sai@example.com", "john@example.com"],
-    taEmail: ["aditya@example.com", "chandrasekhar@example.com"],
-    studentEmail: ["anshul@example.com", "bidisha@example.com", "tanooj@example.com", "geetam@example.com", "anukriti@example.com"],
-  },
-  {
-    courseName: "AOS",
-    instructorEmail: ["john@example.com"],
-    taEmail: ["alice@example.com", "bob@example.com"],
-    studentEmail: ["bidisha@example.com", "tanooj@example.com", "geetam@example.com", "anukriti@example.com"],
-  },
-]);
-
-
-// insert collections in the VidyaVichar database's Questions collection
-db.questions.drop();
-const now = new Date();
-db.questions.insertMany([
-{
-question: "What is a database?",
-askedByEmail: "anshul@example.com", // Updated to email
-courseName: "SSD",
-instructorEmail: "sai@example.com", // Updated to email
-questionAnswered: true,
-answeredAt: now,
-isLive: true,
-createdAt: now,
-|updatedAt: now
-},
-{
-question: "What is indexing?",
-askedByEmail: "tanooj@example.com", // Updated to email
-courseName: "SSD",
-instructorEmail: "sai@example.com", // Updated to email
-questionAnswered: true,
-answeredAt: now,
-isLive: false,
-createdAt: now,
-updatedAt: now
-},
-{
-question: "What is sharding?",
-askedByEmail: "geetam@example.com", // Updated to email
-courseName: "AOS",
-instructorEmail: "john@example.com", // Updated to email
-questionAnswered: false,
-isLive: false,
-createdAt: now,
-updatedAt: now
-},
-{
-question: "What is replication?",
-askedByEmail: "anukriti@example.com", // Updated to email
-courseName: "AOS",
-instructorEmail: "john@example.com", // Updated to email
-questionAnswered: false,
-isLive: true,
-createdAt: now,
-updatedAt: now
-},
-{
-question: "What is a transaction?",
-askedByEmail: "bidisha@example.com", // Updated to email
-courseName: "SSD",
-instructorEmail: "sai@example.com", // Updated to email
-questionAnswered: false,
-isLive: true,
-createdAt: now,
-updatedAt: now
-},
-{
-question: "What is CAP theorem?",
-askedByEmail: "anshul@example.com", // Updated to email
-courseName: "AOS",
-instructorEmail: "john@example.com", // Updated to email
-questionAnswered: false,
-isLive: false,
-createdAt: now,
-updatedAt: now
-},
-{
-question: "What is ACID?",
-askedByEmail: "tanooj@example.com", // Updated to email
-courseName: "SSD",
-instructorEmail: "sai@example.com", // Updated to email
-questionAnswered: false,
-isLive: false,
-createdAt: now,
-updatedAt: now
-},
-{
-question: "What is BASE?",
-askedByEmail: "geetam@example.com", // Updated to email
-courseName: "AOS",
-instructorEmail: "john@example.com", // Updated to email
-questionAnswered: false,
-isLive: false,
-createdAt: now,
-updatedAt: now
-},
-{
-question: "What is a NoSQL database?",
-askedByEmail: "anukriti@example.com", // Updated to email
-courseName: "SSD",
-instructorEmail: "sai@example.com", // Updated to email
-questionAnswered: true,
-answeredAt: now,
-isLive: true,
-createdAt: now,
-updatedAt: now
-},
-{
-question: "What is a relational database?",
-askedByEmail: "bidisha@example.com", // Updated to email
-courseName: "AOS",
-instructorEmail: "john@example.com", // Updated to email
-questionAnswered: false,
-isLive: false,
-createdAt: now,
-updatedAt: now
-},
-{
-question: "What is a primary key?",
-askedByEmail: "anshul@example.com", // Updated to email
-courseName: "SSD",
-instructorEmail: "sai@example.com", // Updated to email
-questionAnswered: true,
-answeredAt: now,
-isLive: true,
-createdAt: now,
-updatedAt: now
-},
-{
-question: "What is a foreign key?",
-askedByEmail: "tanooj@example.com", // Updated to email
-courseName: "AOS",
-instructorEmail: "john@example.com", // Updated to email
-questionAnswered: false,
-isLive: false,
-createdAt: now,
-updatedAt: now
-},
-]);
-
-//Drop collection users if it already exists
-db.users.drop();
-
-// insert collections in the VidyaVichar database's users collection
-
+// Insert into users collection
 db.users.insertMany([
-    {
-        userName: "Anshul",
-        email: "anshul@example.com",
-        role: "student",
-        password: "password123",
-    },
-    {
-        userName: "Bidisha",
-        email: "bidisha@example.com",
-        role: "student",
-        password: "password456",
-    },
-    {
-        userName: "Tanooj",
-        email: "tanooj@example.com",
-        role: "student",
-        password: "password789",
-    },
-    {
-        userName: "Geetam",
-        email: "geetam@example.com",
-        role: "student",
-        password: "password012",
-    },
-    {
-        userName: "Anukriti",
-        email: "anukriti@example.com",
-        role: "student",
-        password: "password345",
-    },
-    {
-        userName: "Sai",
-        email: "sai@example.com",
-        role: "instructor",
-        password: "password678",
-    },
-    {
-        userName: "John",
-        email: "john@example.com",
-        role: "instructor",
-        password: "password901",
-    },
-    {
-        userName: "Alice",
-        email: "alice@example.com",
-        role: "TA",
-        password: "password234",
-    },
-    {
-        userName: "Bob",
-        email: "bob@example.com",
-        role: "TA",
-        password: "password567",
-    },
-    {
-        userName: "Aditya",
-        email: "aditya@example.com",
-        role: "TA",
-        password: "password890",
-    },
-    {
-        userName: "Chandrasekhar",
-        email: "chandrasekhar@example.com",
-        role: "TA",
-        password: "password1234",
-    },
+  {
+    userName: 'Anshul',
+    email: 'anshul@example.com',
+    role: 'student',
+    password: 'password123'
+  },
+  {
+    userName: 'Tanooj',
+    email: 'tanooj@example.com',
+    role: 'student',
+    password: 'password789'
+  },
+  {
+    userName: 'Geetam',
+    email: 'geetam@example.com',
+    role: 'student',
+    password: 'password012'
+  },
+  {
+    userName: 'Anukriti',
+    email: 'anukriti@example.com',
+    role: 'student',
+    password: 'password345'
+  },
+  {
+    userName: 'John',
+    email: 'john@example.com',
+    role: 'instructor',
+    password: 'password901'
+  },
+  {
+    userName: 'Alice',
+    email: 'alice@example.com',
+    role: 'TA',
+    password: 'password234'
+  },
+  {
+    userName: 'Bob',
+    email: 'bob@example.com',
+    role: 'TA',
+    password: 'password567'
+  },
+  {
+    userName: 'Aditya',
+    email: 'aditya@example.com',
+    role: 'TA',
+    password: 'password890'
+  },
+  {
+    userName: 'Chandrasekhar',
+    email: 'chandrasekhar@example.com',
+    role: 'TA',
+    password: 'password1234'
+  },
+  {
+    email: 'shawbidisha4@gmail.com',
+    password: '$2b$10$zoJKOr0BzQzKwC2t7gsrO.9cvs.wUbBbWKSt74HBYprkzW1eAVDTS',
+    role: 'student',
+    isVerified: true,
+    createdAt: new Date('2025-09-28T10:17:22.675Z'),
+    updatedAt: new Date('2025-09-28T10:18:13.741Z'),
+    __v: 0,
+    userName: 'Bidisha Shaw'
+  },
+  {
+    email: 'shawbidisha5@gmail.com',
+    password: '$2b$10$AucCVDUQxPljycpy4u3goOiYp7ngYF3s.KBTrIAbIuEX4eigIQtfK',
+    role: 'instructor',
+    isVerified: true,
+    createdAt: new Date('2025-09-28T10:54:36.509Z'),
+    updatedAt: new Date('2025-09-28T10:55:30.578Z'),
+    __v: 0,
+    userName: 'Sai Anirudh Karre'
+  }
 ]);
 
-//Fetch the count of documents in the collections
-console.log(db.courseMappings.countDocuments());
-console.log(db.questions.countDocuments());
-console.log(db.users.countDocuments());
+// Insert into questions collection
+db.questions.insertMany([
+  {
+    question: 'What is sharding?',
+    askedByEmail: 'geetam@example.com',
+    courseName: 'AOS',
+    instructorEmail: 'john@example.com',
+    questionAnswered: false,
+    isLive: true,
+    createdAt: new Date('2025-09-27T18:25:50.918Z'),
+    updatedAt: new Date('2025-09-27T18:25:50.918Z')
+  },
+  {
+    question: 'What is replication?',
+    askedByEmail: 'anukriti@example.com',
+    courseName: 'AOS',
+    instructorEmail: 'john@example.com',
+    questionAnswered: false,
+    isLive: true,
+    createdAt: new Date('2025-09-27T18:25:50.918Z'),
+    updatedAt: new Date('2025-09-27T18:25:50.918Z')
+  },
+  {
+    question: 'What is CAP theorem?',
+    askedByEmail: 'anshul@example.com',
+    courseName: 'AOS',
+    instructorEmail: 'john@example.com',
+    questionAnswered: false,
+    isLive: true,
+    createdAt: new Date('2025-09-27T18:25:50.918Z'),
+    updatedAt: new Date('2025-09-27T18:25:50.918Z')
+  },
+  {
+    question: 'What is ACID?',
+    askedByEmail: 'tanooj@example.com',
+    courseName: 'SSD',
+    instructorEmail: 'shawbidisha5@gmail.com',
+    questionAnswered: false,
+    isLive: true,
+    createdAt: new Date('2025-09-27T18:25:50.918Z'),
+    updatedAt: new Date('2025-09-27T18:25:50.918Z')
+  },
+  {
+    question: 'What is BASE?',
+    askedByEmail: 'geetam@example.com',
+    courseName: 'AOS',
+    instructorEmail: 'john@example.com',
+    questionAnswered: false,
+    isLive: true,
+    createdAt: new Date('2025-09-27T18:25:50.918Z'),
+    updatedAt: new Date('2025-09-27T18:25:50.918Z')
+  },
+  {
+    question: 'What is a relational database?',
+    askedByEmail: 'shawbidisha4@gmail.com',
+    courseName: 'AOS',
+    instructorEmail: 'john@example.com',
+    questionAnswered: false,
+    isLive: true,
+    createdAt: new Date('2025-09-27T18:25:50.918Z'),
+    updatedAt: new Date('2025-09-27T18:25:50.918Z')
+  },
+  {
+    question: 'What is a foreign key?',
+    askedByEmail: 'tanooj@example.com',
+    courseName: 'AOS',
+    instructorEmail: 'john@example.com',
+    questionAnswered: false,
+    isLive: true,
+    createdAt: new Date('2025-09-27T18:25:50.918Z'),
+    updatedAt: new Date('2025-09-27T18:25:50.918Z')
+  },
+  {
+    question: 'What is the difference between SQL and NoSQL?',
+    askedByEmail: 'shawbidisha4@gmail.com',
+    courseName: 'SSD',
+    instructorEmail: 'shawbidisha5@gmail.com',
+    questionAnswered: false,
+    isLive: true,
+    createdAt: new Date('2025-09-27T15:34:38.416Z'),
+    updatedAt: new Date('2025-09-27T20:24:30.960Z'),
+    __v: 0
+  },
+  {
+    question: 'What is a database?',
+    askedByEmail: 'anshul@example.com',
+    courseName: 'SSD',
+    instructorEmail: 'shawbidisha5@gmail.com',
+    questionAnswered: true,
+    isLive: true,
+    answeredAt: new Date('2025-09-27T18:51:58.223Z'),
+    createdAt: new Date('2025-09-27T18:25:50.918Z'),
+    updatedAt: new Date('2025-09-27T20:24:30.960Z')
+  },
+  {
+    question: 'What is indexing?',
+    askedByEmail: 'tanooj@example.com',
+    courseName: 'SSD',
+    instructorEmail: 'shawbidisha5@gmail.com',
+    questionAnswered: true,
+    isLive: true,
+    answeredAt: new Date('2025-09-27T18:25:50.918Z'),
+    createdAt: new Date('2025-09-27T18:25:50.918Z'),
+    updatedAt: new Date('2025-09-27T18:25:50.918Z')
+  },
+  {
+    question: 'What is a transaction?',
+    askedByEmail: 'shawbidisha4@gmail.com',
+    courseName: 'SSD',
+    instructorEmail: 'shawbidisha5@gmail.com',
+    questionAnswered: true,
+    isLive: true,
+    createdAt: new Date('2025-09-27T18:25:50.918Z'),
+    updatedAt: new Date('2025-09-27T20:24:30.960Z'),
+    answeredAt: new Date('2025-09-27T19:13:52.777Z')
+  },
+  {
+    question: 'What is a NoSQL database?',
+    askedByEmail: 'anukriti@example.com',
+    courseName: 'SSD',
+    instructorEmail: 'shawbidisha5@gmail.com',
+    questionAnswered: true,
+    isLive: true,
+    answeredAt: new Date('2025-09-27T18:25:50.918Z'),
+    createdAt: new Date('2025-09-27T18:25:50.918Z'),
+    updatedAt: new Date('2025-09-27T20:24:30.960Z')
+  },
+  {
+    question: 'What is a primary key?',
+    askedByEmail: 'anshul@example.com',
+    courseName: 'SSD',
+    instructorEmail: 'shawbidisha5@gmail.com',
+    questionAnswered: true,
+    isLive: true,
+    answeredAt: new Date('2025-09-27T18:25:50.918Z'),
+    createdAt: new Date('2025-09-27T18:25:50.918Z'),
+    updatedAt: new Date('2025-09-27T20:24:30.960Z')
+  },
+  {
+    question: 'What is main Foreign Key?',
+    askedByEmail: 'shawbidisha4@gmail.com',
+    courseName: 'SSD',
+    instructorEmail: 'shawbidisha5@gmail.com',
+    questionAnswered: false,
+    isLive: true,
+    createdAt: new Date('2025-09-27T20:31:08.534Z'),
+    updatedAt: new Date('2025-09-27T20:31:08.534Z'),
+    __v: 0
+  },
+  {
+    question: 'how is this impolemented',
+    askedByEmail: 'shawbidisha4@gmail.com',
+    courseName: 'SSD',
+    instructorEmail: 'shawbidisha5@gmail.com',
+    questionAnswered: true,
+    isLive: true,
+    createdAt: new Date('2025-09-28T13:51:29.945Z'),
+    updatedAt: new Date('2025-09-28T13:54:58.942Z'),
+    __v: 0,
+    answeredAt: new Date('2025-09-28T13:54:58.941Z')
+  }
+]);
+
+// Insert into coursemappings collection
+db.coursemappings.insertMany([
+  {
+    courseName: 'SSD',
+    instructorEmail: [ 'shawbidisha5@gmail.com', 'john@example.com' ],
+    taEmail: [ 'aditya@example.com', 'chandrasekhar@example.com' ],
+    studentEmail: [
+      'anshul@example.com',
+      'shawbidisha4@gmail.com',
+      'tanooj@example.com',
+      'geetam@example.com',
+      'anukriti@example.com'
+    ]
+  },
+  {
+    courseName: 'AOS',
+    instructorEmail: [ 'john@example.com' ],
+    taEmail: [ 'alice@example.com', 'bob@example.com' ],
+    studentEmail: [
+      'shawbidisha4@gmail.com',
+      'tanooj@example.com',
+      'geetam@example.com',
+      'anukriti@example.com'
+    ]
+  },
+  {
+    courseName: 'SE',
+    instructorEmail: [ 'shawbidisha5@gmail.com' ],
+    taEmail: [ 'patrice@example.com', 'monk@example.com' ],
+    studentEmail: [
+      'shawbidisha4@gmail.com',
+      'tanooj@example.com',
+      'geetam@example.com',
+      'anukriti@example.com'
+    ]
+  }
+]);
+

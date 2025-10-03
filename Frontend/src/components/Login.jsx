@@ -6,7 +6,7 @@ import "./Login.css";
 
 const Login = () => {
   const navigate = useNavigate();
-  
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -25,39 +25,43 @@ const Login = () => {
         password: password
       })
     })
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        return response.json().then(err => Promise.reject(err));
-      }
-    })
-    .then(data => {
-      if (data.token && data.user) {
-      localStorage.setItem('authToken', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user)); 
-        
-        toast.success('Login successful! 🎉');
-        
-        // Role-based redirect using the role from backend response
-        setTimeout(() => {
-            navigate('/welcome'); // fallback
-        }, 2000);
-      }
-      setLoading(false);
-    })
-    .catch(error => {
-      console.log('Error details:', error);
-      
-      if (error.error) {
-        toast.error(error.error);
-      } else if (error.message) {
-        toast.error(error.message);
-      } else {
-        toast.error('Login failed. Please check your credentials and try again.');
-      }
-      setLoading(false);
-    });
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          return response.json().then(err => Promise.reject(err));
+        }
+      })
+      .then(data => {
+        if (data.token && data.user) {
+          localStorage.setItem('authToken', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+
+          toast.success('Login successful! 🎉');
+
+          // Role-based redirect
+          setTimeout(() => {
+            if (data.user && data.user.role === 'admin') {
+              navigate('/admin'); 
+            } else {
+              navigate('/welcome'); 
+            }
+          }, 2000); // Delay allows user to see the success toast
+        }
+        setLoading(false);
+      })
+      .catch(error => {
+        console.log('Error details:', error);
+
+        if (error.error) {
+          toast.error(error.error);
+        } else if (error.message) {
+          toast.error(error.message);
+        } else {
+          toast.error('Login failed. Please check your credentials and try again.');
+        }
+        setLoading(false);
+      });
   };
 
   const goToSignup = () => {

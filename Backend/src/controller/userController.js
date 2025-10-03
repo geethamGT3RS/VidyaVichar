@@ -30,7 +30,8 @@ const createUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         // Create and save the new user
-        const newUser = new User({ name, email, password: hashedPassword, role });
+        //const newUser = new User({ name, email, password: hashedPassword, role });
+        const newUser = new User({ userName: name, email:email, password: hashedPassword, role:role });
         await newUser.save();
 
         // Send response
