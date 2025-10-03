@@ -96,7 +96,6 @@ const UserAuth = () => {
               <option value="student">Student</option>
               <option value="instructor">Instructor</option>
               <option value="ta">TA</option>
-              <option value="admin">Admin</option>
             </select>
           </div>
           <button type="submit" className="submit-btn" disabled={loading}>

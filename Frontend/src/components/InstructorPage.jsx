@@ -195,7 +195,7 @@ export default function InstructorPage() {
                     </div>
                     {/* controls: home + archive */}
                     <div className="flex items-center gap-3">
-                        <Link to="/" className="inline-flex items-center gap-2 px-3 py-2 border rounded text-slate-700 hover:bg-slate-50">
+                        <Link to="/welcome" className="inline-flex items-center gap-2 px-3 py-2 border rounded text-slate-700 hover:bg-slate-50">
                             <HomeIcon className="w-5 h-5" />
                             <span className="hidden md:inline">Home</span>
                         </Link>
